@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ import com.vc.service.datamodel.Notification;
 @RestController
 public class NotificationManagerService {
 	
+	//@CrossOrigin(origins = "http://localhost:8100")
 	@RequestMapping("/notification")
     public ArrayList<Notification> index() {
         return getNotifications();
