@@ -36,17 +36,19 @@ public class FlightSearchService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 
 		QPXExpressAirlineReservation airlineReservation = new QPXExpressAirlineReservation();
-		airlineReservation.setSolutions(10);
+		airlineReservation.setSolutions("10");
 
-		airlineReservation.getRequest().getPassengers().setAdultCount(tripModel.getHotelPrefs().getNumberOfGuests());
+		System.out.println( "Number of Guests: " + tripModel.getHotelInformation().getNumberOfGuests());
+		System.out.println( "Slice Length: " + airlineReservation.getSlice().length);
+		airlineReservation.getRequest().getPassengers().setAdultCount(tripModel.getHotelInformation().getNumberOfGuests());
 
-		Date date = new Date(tripModel.getStartDate()); 
-
+		Date date = new Date(Long.parseLong(tripModel.getStartDate()));
+		System.out.println("Date: " + sdf.format(date));
 		airlineReservation.getSlice()[0].setDate(sdf.format(date));
 		airlineReservation.getSlice()[0].setOrigin(tripModel.getOrigin().getAirportCode());
 		airlineReservation.getSlice()[0].setDestination(tripModel.getDestination().getAirportCode());
 
-		date = new Date(tripModel.getEndDate());
+		date = new Date(Long.parseLong(tripModel.getEndDate()));
 		airlineReservation.getSlice()[1].setDate(sdf.format(date));
 		airlineReservation.getSlice()[1].setOrigin(tripModel.getDestination().getAirportCode());
 		airlineReservation.getSlice()[1].setDestination(tripModel.getOrigin().getAirportCode());
@@ -87,11 +89,12 @@ public class FlightSearchService {
 		}
 
 		finally {
-			
 			con.disconnect();
 		}
 		
-		System.out.println(results.toJSONString());
+		if (results != null)
+			System.out.println(results.toJSONString());
+		
 		return results.toJSONString();
 
 	}

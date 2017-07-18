@@ -3,8 +3,8 @@ package com.vc.model;
 public class QPXExpressAirlineReservation {
 	
 	private Request request = new Request();
-	private Slice[] slice = new Slice[2];
-	private int solutions;
+	private Slice[] slice = {new Slice(), new Slice()};
+	private String solutions;
 	
 	public class Request {
 		private Passengers passengers = new Passengers();
@@ -15,13 +15,13 @@ public class QPXExpressAirlineReservation {
 	}
 	
 	public class Passengers {
-		private int adultCount;
+		private String adultCount;
 
-		public int getAdultCount() {
+		public String getAdultCount() {
 			return adultCount;
 		}
 
-		public void setAdultCount(int adultCount) {
+		public void setAdultCount(String adultCount) {
 			this.adultCount = adultCount;
 		}
 		
@@ -56,15 +56,11 @@ public class QPXExpressAirlineReservation {
 		return request;
 	}
 
-	public void setRequest(Request request) {
-		this.request = request;
-	}
-
-	public int getSolutions() {
+	public String getSolutions() {
 		return solutions;
 	}
 
-	public void setSolutions(int solutions) {
+	public void setSolutions(String solutions) {
 		this.solutions = solutions;
 	}
 
