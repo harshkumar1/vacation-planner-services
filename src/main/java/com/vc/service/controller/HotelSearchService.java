@@ -15,20 +15,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.vc.model.HotelResponse;
 import com.vc.model.Trip;
 import com.vc.repository.HotelCity;
 
 @RestController
 public class HotelSearchService {
 
-	private String APP_KEY = "1ce89f9b&app_key=72d4535f742f9ae9f9a6999745fef984";
+	private String APP_ID = "1ce89f9b";
+	private String APP_KEY = "72d4535f742f9ae9f9a6999745fef984";
 
 	@Autowired
 	private HotelCity hotelCityMap;
 
 	@Produces(value="application/json")
 	@RequestMapping(value="/hotels", method=RequestMethod.POST)
-	public String getHotels(@RequestBody Trip trip) {
+	public String getHotels(@RequestBody Trip trip) throws JsonProcessingException {
 		String  resultJson = null;
 		String cityId = "6771549831164675055"; //TBC
 		String checkinDate = "20171009";//trip.getStartDate(); //Should be in format YYYYMMDD
@@ -36,7 +41,8 @@ public class HotelSearchService {
 		String adults = "1-1_0";//trip.getHotelInformation().getNumberOfGuests(); //"1-1_0" rooms-adults_children
 		String pageNumber = "1";
 		String url = "http://www.goibibo.com/hotels/search-data/?" + 
-				"app_id=" + APP_KEY + 
+				"app_id=" + APP_ID +
+				"&app_key=" + APP_KEY +
 				"&vcid=" + cityId +
 				"&ci=" + checkinDate + "&co=" + checkoutDate + 
 				"&r=" + adults + 
@@ -45,7 +51,10 @@ public class HotelSearchService {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			String result = restTemplate.getForObject(url, String.class);
-
+			Gson gson = new Gson();
+			HotelResponse hotelObj = gson.fromJson(result, HotelResponse.class);
+			
+			System.out.println("The response is: " + new ObjectMapper().writeValueAsString(hotelObj));
 			System.out.println(result);
 			
 			JSONParser parser = new JSONParser();
