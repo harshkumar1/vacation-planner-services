@@ -2,6 +2,8 @@ package com.vc.model;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelResponse {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class HotelSearchResponse {
 	
 	private String ch;
 	private String gr;
@@ -31,8 +34,13 @@ public class HotelResponse {
 	private String l;
 	private String hn;
 	private String hr;
+	private Personalized_Keys personalized_keys;
 	
-	class Personalized_Keys {
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static class Personalized_Keys {
 		private String np_wt;//": 5782,
 		private String tp_alltax;//: 57820,
 		private String tp;//: 49000
