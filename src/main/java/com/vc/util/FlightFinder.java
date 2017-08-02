@@ -9,6 +9,6 @@ import com.google.api.services.qpxExpress.model.TripOption;
 
 public interface FlightFinder {
 
-	List<TripOption> getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException;
+	String getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException;
 
 }
