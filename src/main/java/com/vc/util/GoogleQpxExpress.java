@@ -6,8 +6,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -20,6 +30,8 @@ import com.google.api.services.qpxExpress.model.TripOption;
 import com.google.api.services.qpxExpress.model.TripOptionsRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchResponse;
+import com.google.gson.JsonArray;
+import com.vc.model.FlightSearchResponse;
 
 public class GoogleQpxExpress implements FlightFinder {
 
@@ -38,7 +50,7 @@ public class GoogleQpxExpress implements FlightFinder {
 	}
 
 	@Override
-	public List<TripOption> getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException {
+	public FlightSearchResponse getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException {
 		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
 		PassengerCounts passengers = new PassengerCounts();
@@ -63,7 +75,7 @@ public class GoogleQpxExpress implements FlightFinder {
 		}
 		
 		TripOptionsRequest request = new TripOptionsRequest();
-		request.setSolutions(10);
+		request.setSolutions(50);
 		request.setPassengers(passengers);
 		request.setSlice(slices);
 
@@ -81,7 +93,14 @@ public class GoogleQpxExpress implements FlightFinder {
 				.search(parameters)
 				.execute();
 
-		return list.getTrips().getTripOption();
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String jsonResponseTripOptions = new ObjectMapper().writeValueAsString(list.getTrips().getTripOption()).replace("////", "");
+		String jsonResponseData = new ObjectMapper().writeValueAsString(list.getTrips().getData()).replace("////", "");
+				//ow.writeValueAsString(list.getTrips().getData());
+	
+		FlightSearchResponse obj = new FlightSearchResponse(jsonResponseData, jsonResponseTripOptions);
+
+		return  obj;
 	}
 
 	private SliceInput getSliceInput(String origin, String destination, Date travelDate) {

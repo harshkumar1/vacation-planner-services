@@ -35,6 +35,8 @@ public class HotelSearchResponse {
 	private String hn;
 	private String hr;
 	private Personalized_Keys personalized_keys;
+	private String  tmob;
+	private String tbig;
 	
 	@Data
 	@NoArgsConstructor

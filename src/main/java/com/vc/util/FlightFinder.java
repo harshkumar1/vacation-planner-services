@@ -6,9 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.api.services.qpxExpress.model.TripOption;
+import com.vc.model.FlightSearchResponse;
 
 public interface FlightFinder {
 
-	List<TripOption> getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException;
+	FlightSearchResponse getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException;
 
 }
