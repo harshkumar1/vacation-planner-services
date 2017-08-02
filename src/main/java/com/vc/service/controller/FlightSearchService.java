@@ -25,9 +25,7 @@ public class FlightSearchService {
 	@Produces(value = "application/json")
 	@RequestMapping(value="/flights", method=RequestMethod.POST)
 	public String getFlight(@RequestBody Trip tripModel) {
-		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		String jsonResponse = null;
-		//QPXExpressAirlineReservation airlineReservation = new QPXExpressAirlineReservation();
 		FlightFinder flightSearch = new GoogleQpxExpress();
 		Date departureDate = new Date (Long.parseLong(tripModel.getStartDate()));
 		Date returnDate = new Date (Long.parseLong(tripModel.getEndDate()));
@@ -37,7 +35,6 @@ public class FlightSearchService {
 			jsonResponse = ow.writeValueAsString(tripOptions);
 			System.out.println("Trip Options: " + jsonResponse);
 		} catch (NumberFormatException | GeneralSecurityException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

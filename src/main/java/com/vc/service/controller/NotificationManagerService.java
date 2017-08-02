@@ -10,7 +10,7 @@ import java.util.TimeZone;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vc.service.datamodel.Notification;
+import com.vc.model.Notification;
 
 @RestController
 public class NotificationManagerService {

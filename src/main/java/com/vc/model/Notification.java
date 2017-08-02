@@ -1,4 +1,4 @@
-package com.vc.service.datamodel;
+package com.vc.model;
 
 import java.util.Date;
 
