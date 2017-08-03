@@ -44,7 +44,6 @@ public class HotelSearchService {
 		
 		String  resultJson = null;
 		String cityId = getCityId(trip.getDestination().getCity());
-				//"6771549831164675055"; //TBC
 		
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 		Date departureDate = new Date (Long.parseLong(trip.getStartDate()));
@@ -53,6 +52,47 @@ public class HotelSearchService {
 		String checkoutDate = df.format(returnDate).toString(); //Should be in format YYYYMMDD
 		String adults = trip.getHotelInformation().getNumberOfRooms() + "-" + trip.getHotelInformation().getNumberOfGuests() + "_0";//trip.getHotelInformation().getNumberOfGuests(); //"1-1_0" rooms-adults_children
 		String pageNumber = "1";
+		
+		queryForHotels(cityId, checkinDate, checkoutDate, adults, pageNumber);
+		
+		List<Object> hotelResponseList = queryForHotels(cityId, checkinDate, checkoutDate, adults, pageNumber);
+		List<HotelSearchResponse> hotelResponses = hotelResponseList.stream().map(e -> {
+			Map<String, Object> map1 = (LinkedTreeMap) e;
+			return new ObjectMapper().convertValue(map1, HotelSearchResponse.class);
+			//return hotelResponse;
+		}).collect(Collectors.toList());
+		
+		hotelResponseList = queryForHotels(cityId, checkinDate, checkoutDate, adults, pageNumber+1);
+		List<HotelSearchResponse> hotelResponses1 = hotelResponseList.stream().map(e -> {
+			Map<String, Object> map1 = (LinkedTreeMap) e;
+			return new ObjectMapper().convertValue(map1, HotelSearchResponse.class);
+			//return hotelResponse;
+		}).collect(Collectors.toList());
+		
+		hotelResponses.addAll(hotelResponses1);
+		try {
+			System.out.println("The response is: " + new ObjectMapper().writeValueAsString(hotelResponses));
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	
+		for (HotelSearchResponse hotelResponse : hotelResponses) {
+			if ( Float.parseFloat(hotelResponse.getTp_alltax()) > Float.parseFloat(trip.getBudgetLimit()) ) {
+				hotelResponses.remove(hotelResponse);
+			}
+		}
+		
+		resultJson = new Gson().toJson(hotelResponses);
+		System.out.println(resultJson);
+		return resultJson;
+
+	}
+
+	private List<Object> queryForHotels(String cityId, String checkinDate, String checkoutDate, String adults,
+			String pageNumber) {
+		List<HotelSearchResponse> hotelResponses = null;
+		List<Object> hotelResponseList = null;
 		String url = "http://www.goibibo.com/hotels/search-data/?" + 
 				"app_id=" + APP_ID +
 				"&app_key=" + APP_KEY +
@@ -64,28 +104,14 @@ public class HotelSearchService {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			String result = restTemplate.getForObject(url, String.class);
-			Gson gson = new Gson();
-			Map<String, Object> hotelObj = gson.fromJson(result, HashMap.class);
-			List<Object> hotelResponseList = (ArrayList) hotelObj.entrySet().stream().findFirst().get().getValue();
+			Map<String, Object> hotelObj = new Gson().fromJson(result, HashMap.class);
+			hotelResponseList = (ArrayList) hotelObj.entrySet().stream().findFirst().get().getValue();
 			//LinkedTreeMap hotelResponseList = (LinkedTreeMap) hotelObj.entrySet().stream().findFirst().get().getValue();
-			List<HotelSearchResponse> hotelResponses = hotelResponseList.stream().map(e -> {
-				Map<String, Object> map1 = (LinkedTreeMap) e;
-				return new ObjectMapper().convertValue(map1, HotelSearchResponse.class);
-				//return hotelResponse;
-			}).collect(Collectors.toList());
-
-			System.out.println("The response is: " + new ObjectMapper().writeValueAsString(hotelResponses));
-			System.out.println(result);
-
-			resultJson = gson.toJson(hotelResponses);
-			System.out.println(resultJson);
-
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-		return resultJson;
-
+		return hotelResponseList;
 	}
 
 	public String getCityId(String cityName) {
@@ -115,12 +141,6 @@ public class HotelSearchService {
 
 	private CsvCityList findCityIdByName(List<CsvCityList> cityList, String cityName) {
 		return cityList.stream().filter(item -> item.getcity_name().equals(cityName)).findFirst().get();
-		/*for (CsvCityList city : cityList) {
-			if (city.getcity_name().equals(cityName))
-				return city;
-		}
-		
-		return null;*/
 	}
 
 
