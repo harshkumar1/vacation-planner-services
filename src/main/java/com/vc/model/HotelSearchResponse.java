@@ -52,6 +52,9 @@ public class HotelSearchResponse {
 	public String getTp_alltax() {
 		return tp_alltax;
 	}
-	
+
+	public String getGr() {
+		return gr;
+	}
 
 }

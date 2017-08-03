@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -82,8 +83,20 @@ public class HotelSearchService {
 		List<HotelSearchResponse> filteredHotelResponse = new ArrayList<HotelSearchResponse>();
 		
 		for (HotelSearchResponse hotelResponse : hotelResponses) {
-			if ( Float.parseFloat(hotelResponse.getTp_alltax()) <= Float.parseFloat(trip.getBudgetLimit()) ) {
-				filteredHotelResponse.add(hotelResponse);
+			
+			try {
+				if ( Float.parseFloat(hotelResponse.getTp_alltax()) <= Float.parseFloat(trip.getBudgetLimit()) ) {
+					Arrays.asList(trip.getHotelInformation().getRatings());
+					double[] tripRatings = Arrays.stream(trip.getHotelInformation().getRatings()).mapToDouble(Double::parseDouble).toArray();
+					double reponseRating = Double.parseDouble(hotelResponse.getGr());
+					for (double tripRating : tripRatings) {
+						if (reponseRating >= tripRating)
+							filteredHotelResponse.add(hotelResponse);
+					}
+					
+				} 
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 		
