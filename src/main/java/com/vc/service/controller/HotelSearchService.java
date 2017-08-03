@@ -1,7 +1,7 @@
 package com.vc.service.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.Produces;
 
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -135,9 +137,14 @@ public class HotelSearchService {
 	private MappingIterator<CsvCityList> loadCityData() throws IOException, JsonProcessingException {
 		CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader();
 		CsvMapper mapper = new CsvMapper();
-		File file = new ClassPathResource("city_list.csv").getFile();
-		MappingIterator<CsvCityList> readValues = 
-				mapper.reader(CsvCityList.class).with(bootstrapSchema).readValues(file);
+		ResourceLoader resourceLoader = new FileSystemResourceLoader();
+		Resource resource = resourceLoader.getResource("classpath:/city_list.csv");
+		
+		InputStream csvFileInputStream = resource.getInputStream();
+		
+		MappingIterator<CsvCityList> readValues = mapper.reader(CsvCityList.class).with(bootstrapSchema).readValues(csvFileInputStream);
+		/*MappingIterator<CsvCityList> readValues = 
+				mapper.reader(CsvCityList.class).with(bootstrapSchema).readValues(file);*/
 		return readValues;
 	}
 
