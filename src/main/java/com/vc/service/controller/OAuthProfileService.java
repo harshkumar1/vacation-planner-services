@@ -3,6 +3,7 @@ package com.vc.service.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,14 +44,18 @@ public class OAuthProfileService {
 	}
 
 	@RequestMapping(value = "{oAuthId}/user", method = RequestMethod.GET)
-	User getUserFromOAuthProfile(@PathVariable("oAuthId") String oAuthId) {
+	ResponseEntity<User> getUserFromOAuthProfile(@PathVariable("oAuthId") String oAuthId) {
 		OAuthProfile profile = this.oAuthProfileRepository.findOne(oAuthId);
+
+		if (profile == null || profile.user == null) {
+			return ResponseEntity.notFound().build();
+		}
 
 		User user = new User(profile.user.getName(), profile.user.getPassword());
 		user.id = profile.user.getId();
 		user.username = profile.user.getUsername();
 		user.linkedAccount = profile;
 
-		return user;
+		return ResponseEntity.ok(user);
 	}
 }

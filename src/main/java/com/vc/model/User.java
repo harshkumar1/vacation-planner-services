@@ -1,5 +1,6 @@
 package com.vc.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,6 +13,8 @@ public class User {
 	public Long id;
 
 	public String password;
+
+	@Column(unique = true)
 	public String username;
 	public String name;
 	public String email;
