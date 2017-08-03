@@ -77,13 +77,15 @@ public class HotelSearchService {
 			e1.printStackTrace();
 		}
 	
+		List<HotelSearchResponse> filteredHotelResponse = new ArrayList<HotelSearchResponse>();
+		
 		for (HotelSearchResponse hotelResponse : hotelResponses) {
-			if ( Float.parseFloat(hotelResponse.getTp_alltax()) > Float.parseFloat(trip.getBudgetLimit()) ) {
-				hotelResponses.remove(hotelResponse);
+			if ( Float.parseFloat(hotelResponse.getTp_alltax()) <= Float.parseFloat(trip.getBudgetLimit()) ) {
+				filteredHotelResponse.add(hotelResponse);
 			}
 		}
 		
-		resultJson = new Gson().toJson(hotelResponses);
+		resultJson = new Gson().toJson(filteredHotelResponse);
 		System.out.println(resultJson);
 		return resultJson;
 
