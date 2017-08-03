@@ -1,11 +1,9 @@
 package com.vc.repository;
 
-import com.vc.model.*;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public interface UserRepository extends CrudRepository<User, Long>{
+import com.vc.model.User;
 
+public interface UserRepository extends JpaRepository<User, Long> {
+	User findByUsername(String username);
 }
