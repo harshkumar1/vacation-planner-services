@@ -29,7 +29,7 @@ public class FlightSearchService {
 		try {
 			FlightSearchResponse tripOptions = flightSearch.getTripResults(tripModel.getOrigin().getAirportCode(), tripModel.getDestination().getAirportCode(), departureDate, returnDate, Integer.parseInt(tripModel.getHotelInformation().getNumberOfGuests()), 0, 0);
 			Gson gsonObj = new Gson();
-			jsonResponse = gsonObj.toJson(tripOptions).replace("////", "");
+			jsonResponse = gsonObj.toJson(tripOptions).replace("/\\", "");
 			System.out.println("Trip Options: " + jsonResponse);
 		} catch (NumberFormatException | GeneralSecurityException | IOException e) {
 			e.printStackTrace();

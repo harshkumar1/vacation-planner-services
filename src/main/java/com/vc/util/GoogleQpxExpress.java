@@ -85,9 +85,8 @@ public class GoogleQpxExpress implements FlightFinder {
 				.execute();
 
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		String jsonResponseTripOptions = new ObjectMapper().writeValueAsString(list.getTrips().getTripOption()).replace("////", "");
-		String jsonResponseData = new ObjectMapper().writeValueAsString(list.getTrips().getData()).replace("////", "");
-				//ow.writeValueAsString(list.getTrips().getData());
+		String jsonResponseTripOptions = new ObjectMapper().writeValueAsString(list.getTrips().getTripOption());
+		String jsonResponseData = new ObjectMapper().writeValueAsString(list.getTrips().getData());
 	
 		FlightSearchResponse obj = new FlightSearchResponse(jsonResponseData, jsonResponseTripOptions);
 
