@@ -38,7 +38,7 @@ public class GoogleQpxExpress implements FlightFinder {
 	}
 
 	@Override
-	public List<TripOption> getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException {
+	public String getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException {
 		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
 		PassengerCounts passengers = new PassengerCounts();
@@ -63,7 +63,7 @@ public class GoogleQpxExpress implements FlightFinder {
 		}
 		
 		TripOptionsRequest request = new TripOptionsRequest();
-		request.setSolutions(10);
+		request.setSolutions(50);
 		request.setPassengers(passengers);
 		request.setSlice(slices);
 
@@ -81,7 +81,7 @@ public class GoogleQpxExpress implements FlightFinder {
 				.search(parameters)
 				.execute();
 
-		return list.getTrips().getTripOption();
+		return  list.getTrips().getData() + list.getTrips().getTripOption().toString();
 	}
 
 	private SliceInput getSliceInput(String origin, String destination, Date travelDate) {

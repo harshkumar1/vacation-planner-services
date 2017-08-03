@@ -30,7 +30,7 @@ public class FlightSearchService {
 		Date departureDate = new Date (Long.parseLong(tripModel.getStartDate()));
 		Date returnDate = new Date (Long.parseLong(tripModel.getEndDate()));
 		try {
-			List<TripOption> tripOptions = flightSearch.getTripResults(tripModel.getOrigin().getAirportCode(), tripModel.getDestination().getAirportCode(), departureDate, returnDate, Integer.parseInt(tripModel.getHotelInformation().getNumberOfGuests()), 0, 0);
+			String tripOptions = flightSearch.getTripResults(tripModel.getOrigin().getAirportCode(), tripModel.getDestination().getAirportCode(), departureDate, returnDate, Integer.parseInt(tripModel.getHotelInformation().getNumberOfGuests()), 0, 0);
 			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 			jsonResponse = ow.writeValueAsString(tripOptions);
 			System.out.println("Trip Options: " + jsonResponse);
