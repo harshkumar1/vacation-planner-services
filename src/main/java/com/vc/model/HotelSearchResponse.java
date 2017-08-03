@@ -35,6 +35,8 @@ public class HotelSearchResponse {
 	private String hn;
 	private String hr;
 	private Personalized_Keys personalized_keys;
+	private String  tmob;
+	private String tbig;
 	
 	@Data
 	@NoArgsConstructor
@@ -46,5 +48,10 @@ public class HotelSearchResponse {
 		private String tp;//: 49000
 		
 	}
+
+	public String getTp_alltax() {
+		return tp_alltax;
+	}
+	
 
 }
