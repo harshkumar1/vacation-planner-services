@@ -67,6 +67,7 @@ public class GoogleQpxExpress implements FlightFinder {
 		
 		TripOptionsRequest request = new TripOptionsRequest();
 		request.setSolutions(50);
+		request.setTicketingCountry("US");
 		request.setPassengers(passengers);
 		request.setSlice(slices);
 

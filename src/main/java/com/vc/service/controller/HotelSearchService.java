@@ -2,6 +2,7 @@ package com.vc.service.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class HotelSearchService {
 	private String APP_ID = "1ce89f9b";
 	private String APP_KEY = "72d4535f742f9ae9f9a6999745fef984";
 	private static List<CsvCityList> cityList = null;
+	private static float USDCONVERSION = 66;
 	
 	@Produces(value="application/json")
 	@RequestMapping(value="/hotels", method=RequestMethod.POST)
@@ -80,9 +82,18 @@ public class HotelSearchService {
 		}
 	
 		List<HotelSearchResponse> filteredHotelResponse = new ArrayList<HotelSearchResponse>();
+		DecimalFormat decimalFormat = new DecimalFormat("#.##");
 		
 		for (HotelSearchResponse hotelResponse : hotelResponses) {
 			if ( Float.parseFloat(hotelResponse.getTp_alltax()) <= Float.parseFloat(trip.getBudgetLimit()) ) {
+			    hotelResponse.getPersonalized_keys().setNp_wt(String.valueOf(decimalFormat.format(Float.parseFloat(hotelResponse.getPersonalized_keys().getNp_wt())/USDCONVERSION)));
+			    hotelResponse.getPersonalized_keys().setTp(String.valueOf(decimalFormat.format(Float.parseFloat(hotelResponse.getPersonalized_keys().getTp())/USDCONVERSION)));		
+			    hotelResponse.getPersonalized_keys().setTp_alltax(String.valueOf(decimalFormat.format(Float.parseFloat(hotelResponse.getPersonalized_keys().getTp_alltax())/USDCONVERSION)));
+			    
+			    hotelResponse.setPrc(String.valueOf(decimalFormat.format(Float.parseFloat(hotelResponse.getPrc())/USDCONVERSION)));
+			    hotelResponse.setTp(String.valueOf(decimalFormat.format(Float.parseFloat(hotelResponse.getTp())/USDCONVERSION)));
+			    hotelResponse.setTp_alltax(String.valueOf(decimalFormat.format(Float.parseFloat(hotelResponse.getTp_alltax())/USDCONVERSION)));
+			    
 				filteredHotelResponse.add(hotelResponse);
 			}
 		}
@@ -143,8 +154,7 @@ public class HotelSearchService {
 		InputStream csvFileInputStream = resource.getInputStream();
 		
 		MappingIterator<CsvCityList> readValues = mapper.reader(CsvCityList.class).with(bootstrapSchema).readValues(csvFileInputStream);
-		/*MappingIterator<CsvCityList> readValues = 
-				mapper.reader(CsvCityList.class).with(bootstrapSchema).readValues(file);*/
+
 		return readValues;
 	}
 
