@@ -6,7 +6,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -41,7 +43,7 @@ public class GoogleQpxExpress implements FlightFinder {
 	}
 
 	@Override
-	public FlightSearchResponse getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException {
+	public Map<String, Object> getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException {
 		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
 		PassengerCounts passengers = new PassengerCounts();
@@ -84,13 +86,11 @@ public class GoogleQpxExpress implements FlightFinder {
 				.search(parameters)
 				.execute();
 
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		String jsonResponseTripOptions = new ObjectMapper().writeValueAsString(list.getTrips().getTripOption());
-		String jsonResponseData = new ObjectMapper().writeValueAsString(list.getTrips().getData());
-	
-		FlightSearchResponse obj = new FlightSearchResponse(jsonResponseData, jsonResponseTripOptions);
+		Map<String, Object> flightResponse = new HashMap<>();
+		flightResponse.put("data", list.getTrips().getData());
+		flightResponse.put("tripOption", list.getTrips().getTripOption());
 
-		return  obj;
+		return flightResponse;
 	}
 
 	private SliceInput getSliceInput(String origin, String destination, Date travelDate) {
