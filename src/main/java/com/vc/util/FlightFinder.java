@@ -5,8 +5,6 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.Map;
 
-import com.vc.model.FlightSearchResponse;
-
 public interface FlightFinder {
 	Map<String, Object> getTripResults(String origin, String destination, Date departureDate, Date returnDate, int adult, int child, int infant) throws GeneralSecurityException, IOException;
 

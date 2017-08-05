@@ -24,7 +24,6 @@ import com.google.api.services.qpxExpress.model.TripOption;
 import com.google.api.services.qpxExpress.model.TripOptionsRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchResponse;
-import com.vc.model.FlightSearchResponse;
 
 public class GoogleQpxExpress implements FlightFinder {
 
